@@ -156,7 +156,6 @@ public class WatchDir {
 
 				// print out event
 				System.out.format("%s: %s\n", event.kind().name(), child);
-				
 				checkForChild(kind, child);
 				checkForSubdirectory(kind, child);
 			}

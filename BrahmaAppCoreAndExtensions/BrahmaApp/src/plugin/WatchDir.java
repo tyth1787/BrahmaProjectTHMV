@@ -122,7 +122,7 @@ public class WatchDir {
      * Process all events for keys queued to the watcher
      */
     void processEvents() {
-        for (;;) {
+        while (true) {
 
             // wait for key to be signalled
             WatchKey key;

@@ -55,7 +55,7 @@ public class WatchDir {
     private boolean trace = false;
     
     // C.R. Change
-    private PluginManager manager;
+    private IPluginIO manager;
 
     @SuppressWarnings("unchecked")
     static <T> WatchEvent<T> cast(WatchEvent<?> event) {
@@ -100,7 +100,7 @@ public class WatchDir {
     /**
      * Creates a WatchService and registers the given directory
      */
-    WatchDir(PluginManager manager, Path dir, boolean recursive) throws IOException {
+    WatchDir(IPluginIO manager, Path dir, boolean recursive) throws IOException {
     	this.manager = manager;
         this.watcher = FileSystems.getDefault().newWatchService();
         this.keys = new HashMap<WatchKey,Path>();

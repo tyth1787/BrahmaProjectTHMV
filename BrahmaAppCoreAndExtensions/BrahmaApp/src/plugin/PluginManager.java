@@ -11,7 +11,7 @@ import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
-public class PluginManager implements Runnable {
+public class PluginManager implements Runnable,IPluginIO {
 	private PluginCore core;
 	private WatchDir watchDir;
 	private HashMap<Path, Plugin> pathToPlugin;
@@ -43,7 +43,7 @@ public class PluginManager implements Runnable {
 		watchDir.processEvents();
 	}
 
-	void loadBundle(Path bundlePath) throws Exception {
+	public void loadBundle(Path bundlePath) throws Exception {
 		// Get hold of the jar file
 		File jarBundle = bundlePath.toFile();
 		JarFile jarFile = new JarFile(jarBundle);
@@ -67,7 +67,7 @@ public class PluginManager implements Runnable {
         jarFile.close();
 	}
 	
-	void unloadBundle(Path bundlePath) {
+	public void unloadBundle(Path bundlePath) {
 		Plugin plugin = this.pathToPlugin.remove(bundlePath);
 		if(plugin != null) {
 			this.core.removePlugin(plugin.getId());

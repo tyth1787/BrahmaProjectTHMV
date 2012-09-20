@@ -13,11 +13,8 @@ import javax.swing.event.ListSelectionListener;
 public class PluginCore {
 	// GUI Widgets that we will need
 	private JFrame frame;
-	private JPanel contentPane;
 	private JLabel bottomLabel;
-	private JList sideList;
 	private DefaultListModel<String> listModel;
-	private JPanel centerEnvelope;
 	
 	// For holding registered plugin
 	private HashMap<String, Plugin> idToPlugin;
@@ -33,19 +30,19 @@ public class PluginCore {
 		frame = new JFrame("Pluggable Board Application");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		contentPane = (JPanel)frame.getContentPane();
+		JPanel contentPane = (JPanel)frame.getContentPane();
 		contentPane.setPreferredSize(new Dimension(700, 500));
 		bottomLabel = new JLabel("No plugins registered yet!");
 		
 		listModel = new DefaultListModel<String>();
-		sideList = new JList(listModel);
+		JList sideList = new JList(listModel);
 		sideList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		sideList.setLayoutOrientation(JList.VERTICAL);
 		JScrollPane scrollPane = new JScrollPane(sideList);
 		scrollPane.setPreferredSize(new Dimension(100, 50));
 		
 		// Create center display area
-		centerEnvelope = new JPanel(new BorderLayout());
+		JPanel centerEnvelope = new JPanel(new BorderLayout());
 		centerEnvelope.setBorder(BorderFactory.createLineBorder(Color.black, 5));
 		
 		// Lets lay them out, contentPane by default has BorderLayout as its layout manager
@@ -53,8 +50,29 @@ public class PluginCore {
 		contentPane.add(scrollPane, BorderLayout.EAST);
 		contentPane.add(bottomLabel, BorderLayout.SOUTH);
 		
+		addListeners(centerEnvelope, contentPane, sideList);
+		
+		startPluginManager();
+
+
+	}
+	
+	// Start the plugin manager now that the core is ready
+	private void startPluginManager() {
+		try {
+			this.pluginManager = new PluginManager(this);
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		Thread thread = new Thread(this.pluginManager);
+		thread.start();
+	}
+	
+	private void addListeners(final JPanel centerEnvelope, final JPanel contentPane, final JList sideList) {
 		// Add action listeners
 		sideList.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 				// If the list is still updating, return
@@ -76,6 +94,11 @@ public class PluginCore {
 				// The newly selected plugin is our current plugin
 				currentPlugin = plugin;
 				
+				loadPlugin(plugin);
+			}
+
+			//separate visual components
+			private void loadPlugin(Plugin plugin) {
 				// Clear previous working area
 				centerEnvelope.removeAll();
 				
@@ -90,20 +113,9 @@ public class PluginCore {
 				
 				// Start the plugin
 				currentPlugin.start();
-				
-				bottomLabel.setText("The " + currentPlugin.getId() + " is running!");
+				setBottomLabelText(plugin.getId(),"is running!");
 			}
 		});
-		
-		// Start the plugin manager now that the core is ready
-		try {
-			this.pluginManager = new PluginManager(this);
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-		Thread thread = new Thread(this.pluginManager);
-		thread.start();
 	}
 	
 	public void start() {
@@ -128,7 +140,11 @@ public class PluginCore {
 	public void addPlugin(Plugin plugin) {
 		this.idToPlugin.put(plugin.getId(), plugin);
 		this.listModel.addElement(plugin.getId());
-		this.bottomLabel.setText("The " + plugin.getId() + " plugin has been recently added!");
+		setBottomLabelText(plugin.getId(),"plugin has been recently added!");
+	}
+	
+	public void setBottomLabelText(String newText, String pluginId) {
+		this.bottomLabel.setText("The " + pluginId + " " + newText);
 	}
 	
 	public void removePlugin(String id) {
@@ -137,7 +153,6 @@ public class PluginCore {
 		
 		// Stop the plugin if it is still running
 		plugin.stop();
-
-		this.bottomLabel.setText("The " + plugin.getId() + " plugin has been recently removed!");
+		setBottomLabelText(plugin.getId(),"plugin has been recently removed!");
 	}
 }

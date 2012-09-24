@@ -55,7 +55,7 @@ public class WatchDir {
 	private boolean trace = false;
 
 	// C.R. Change
-	private IPluginIO manager;
+	private IPluginIO pluginIO;
 
 	@SuppressWarnings("unchecked")
 	static <T> WatchEvent<T> cast(WatchEvent<?> event) {
@@ -100,8 +100,8 @@ public class WatchDir {
 	/**
 	 * Creates a WatchService and registers the given directory
 	 */
-	WatchDir(IPluginIO manager, Path dir, boolean recursive) throws IOException {
-		this.manager = manager;
+	WatchDir(IPluginIO pluginIO, Path dir, boolean recursive) throws IOException {
+		this.pluginIO = pluginIO;
 		this.watcher = FileSystems.getDefault().newWatchService();
 		this.keys = new HashMap<WatchKey, Path>();
 		this.recursive = recursive;
@@ -134,7 +134,7 @@ public class WatchDir {
 
 			// wait for key to be signalled
 			Path dir;
-			WatchKey key;
+			WatchKey key; 
 			try {
 				key = watcher.take();
 				dir = getDirectory(key);
@@ -188,12 +188,12 @@ public class WatchDir {
 
 	private void checkForChild(WatchEvent.Kind kind, Path child) {
 		// C.R. Changes
-		if (this.manager != null) {
+		if (this.pluginIO != null) {
 			try {
 				if (kind == ENTRY_CREATE) {
-					this.manager.loadBundle(child);
+					this.pluginIO.loadBundle(child);
 				} else if (kind == ENTRY_DELETE) {
-					this.manager.unloadBundle(child);
+					this.pluginIO.unloadBundle(child);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

@@ -1,0 +1,56 @@
+<sequence-diagram version="1.0.10" icons="true" automaticImage="PNG">  
+  <object id="1" language="java" name="plugin.Brahma" project="BrahmaApp" file="/BrahmaApp/src/plugin/Brahma.java" 
+    binary="false" label="brahma" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="2">      
+      <position height="293" width="0" x="0" y="357"/>    
+    </execution>  
+  </object>  
+  <object id="5" language="java" name="plugin.PluginCore" project="BrahmaApp" 
+    file="/BrahmaApp/src/plugin/PluginCore.java" binary="false" label="pluginCore" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="4">      
+      <position height="251" width="0" x="0" y="378"/>    
+    </execution>    
+    <execution id="7">      
+      <position height="188" width="0" x="0" y="420"/>    
+    </execution>  
+  </object>  
+  <object id="10" language="java" name="plugin.PluginManager" project="BrahmaApp" 
+    file="/BrahmaApp/src/plugin/PluginManager.java" binary="false" label="pluginManager" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="9">      
+      <position height="136" width="0" x="0" y="451"/>    
+    </execution>    
+    <execution id="12">      
+      <position height="73" width="0" x="0" y="493"/>    
+    </execution>  
+  </object>  
+  <object id="15" language="java" name="plugin.WatchDir" project="BrahmaApp" file="/BrahmaApp/src/plugin/WatchDir.java" 
+    binary="false" label="watchDir" type="class" autoSize="true">    
+    <position height="0" width="0" x="0" y="0"/>    
+    <execution id="14">      
+      <position height="21" width="0" x="0" y="524"/>    
+    </execution>  
+  </object>  
+  <message id="3" operation="PluginCore()">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="4"/>  
+  </message>  
+  <message id="6" operation="startPluginManager():void">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="7"/>  
+  </message>  
+  <message id="8" operation="PluginManager(plugin.IPluginLoader)">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="9"/>  
+  </message>  
+  <message id="11" operation="run():void">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="12"/>  
+  </message>  
+  <message id="13" operation="processEvents():void">    
+    <end type="SOURCE" refId="12"/>    
+    <end type="TARGET" refId="14"/>  
+  </message>
+</sequence-diagram>

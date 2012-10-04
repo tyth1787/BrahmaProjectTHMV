@@ -15,17 +15,17 @@ public class PluginCore implements IPluginLoader{
 	private PluginView pluginView;
 
 	// For holding registered plugin
-	private HashMap<String, Plugin> idToPlugin;
-	private Plugin currentPlugin;
+	private HashMap<String, IPlugin> idToPlugin;
+	private IPlugin currentPlugin;
 
 	// Plugin manager
 	PluginManager pluginManager;
 
 	public PluginCore() {
 		
-		listModel = new DefaultListModel<String>();
-		pluginView = new PluginView(listModel);
-		idToPlugin = new HashMap<String, Plugin>();
+		setListModel(new DefaultListModel<String>());
+		pluginView = new PluginView(getListModel());
+		idToPlugin = new HashMap<String, IPlugin>();
 
 		addListeners();
 
@@ -57,8 +57,8 @@ public class PluginCore implements IPluginLoader{
 
 						// List has finalized selection, let's process further
 						int index = pluginView.getSideList().getSelectedIndex();
-						String id = listModel.elementAt(index);
-						Plugin plugin = idToPlugin.get(id);
+						String id = getListModel().elementAt(index);
+						IPlugin plugin = idToPlugin.get(id);
 
 						if (plugin == null || plugin.equals(currentPlugin))
 							return;
@@ -98,19 +98,27 @@ public class PluginCore implements IPluginLoader{
 		});
 	}
 
-	public void addPlugin(Plugin plugin) {
-		this.idToPlugin.put(plugin.getId(), plugin);
-		this.listModel.addElement(plugin.getId());
-		pluginView.setBottomLabelText(plugin.getId(), "plugin has been recently added!");
+	public void addPlugin(IPlugin iPlugin) {
+		this.idToPlugin.put(iPlugin.getId(), iPlugin);
+		this.getListModel().addElement(iPlugin.getId());
+		pluginView.setBottomLabelText(iPlugin.getId(), "plugin has been recently added!");
 	}
 
 
 	public void removePlugin(String id) {
-		Plugin plugin = this.idToPlugin.remove(id);
-		this.listModel.removeElement(id);
+		IPlugin plugin = this.idToPlugin.remove(id);
+		this.getListModel().removeElement(id);
 
 		// Stop the plugin if it is still running
 		plugin.stop();
 		pluginView.setBottomLabelText(plugin.getId(), "plugin has been recently removed!");
+	}
+
+	public DefaultListModel<String> getListModel() {
+		return listModel;
+	}
+
+	public void setListModel(DefaultListModel<String> listModel) {
+		this.listModel = listModel;
 	}
 }

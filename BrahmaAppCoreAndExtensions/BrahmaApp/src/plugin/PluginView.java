@@ -49,7 +49,7 @@ public class PluginView {
 		
 	}
 	
-	public void loadPluginIntoView(Plugin plugin) {
+	public void loadPluginIntoView(IPlugin plugin) {
 		// Clear previous working area
 		centerEnvelope.removeAll();
 

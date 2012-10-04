@@ -1,6 +1,6 @@
 package plugin;
 
 public interface IPluginLoader {
-	public void addPlugin(Plugin plugin);
+	public void addPlugin(IPlugin iplugin);
 	public void removePlugin(String id);
 }

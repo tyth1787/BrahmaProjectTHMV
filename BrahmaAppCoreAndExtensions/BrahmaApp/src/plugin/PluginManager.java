@@ -18,7 +18,7 @@ public class PluginManager implements Runnable,IPluginIO {
 
 	public PluginManager(IPluginLoader loader) throws IOException {
 		this.loader = loader;
-		this.pathToPlugin = new HashMap<Path, Plugin>();
+		this.setPathToPlugin(new HashMap<Path, Plugin>());
 		watchDir = new WatchDir(this, FileSystems.getDefault().getPath("plugins"), false);
 	}
 
@@ -61,16 +61,24 @@ public class PluginManager implements Runnable,IPluginIO {
         // Create a new instance of the plugin class and add to the core
         Plugin plugin = (Plugin)pluginClass.newInstance();
         this.loader.addPlugin(plugin);
-        this.pathToPlugin.put(bundlePath, plugin);
+        this.getPathToPlugin().put(bundlePath, plugin);
 
         // Release the jar resources
         jarFile.close();
 	}
 	
 	public void unloadBundle(Path bundlePath) {
-		Plugin plugin = this.pathToPlugin.remove(bundlePath);
+		Plugin plugin = this.getPathToPlugin().remove(bundlePath);
 		if(plugin != null) {
 			this.loader.removePlugin(plugin.getId());
 		}
+	}
+
+	public HashMap<Path, Plugin> getPathToPlugin() {
+		return pathToPlugin;
+	}
+
+	public void setPathToPlugin(HashMap<Path, Plugin> pathToPlugin) {
+		this.pathToPlugin = pathToPlugin;
 	}
 }
